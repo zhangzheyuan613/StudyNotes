@@ -1,0 +1,77 @@
+////队列的创建
+//typedef int DataType;
+//typedef struct QNode  //队列中节点的结构
+//{
+//	DataType data;
+//	struct QNode* next;
+//}QNode;
+//typedef struct Queue//队列的结构
+//{
+//	struct QNode* front;
+//	struct QNode* back;
+//}Queue;
+////创建队列结点
+//QNode* BuyQueueNode(DataType data)
+//{
+//	QNode* node = (QNode*)malloc(sizeof(QNode));
+//	if (NULL == node)
+//	{
+//		assert(0);
+//		return NULL;
+//	}
+//	node->data = data;
+//	node->next = NULL;
+//	return node;
+//}
+////初始化
+//void QueueInit(Queue* q)
+//{
+//	assert(q);
+//	q->back = q->front =BuyQueueNode(0);
+//}
+////入队列
+//void QueuePush(Queue* q, DataType data)
+//{
+//	assert(q); 
+//	q->back->next = BuyQueueNode(data);
+//}
+////出队列
+//void QueuePop(Queue* q)
+//{
+//
+//}
+////获取队头元素
+//DataType QueueFront(Queue* q)
+//{
+//
+//}
+////获取队尾元素
+//DataType QueueBack(Queue* q)
+//{
+//
+//}
+////获取队列中有效元素个数
+//int QueueSize(Queue* q)
+//{
+//
+//}
+////检测队列是否为空
+//int QueueEmpty(Queue* q)
+//{
+//
+//}
+////销毁队列
+//void QueueDestroy(Queue* q)
+//{
+//
+//}
+////测试
+//void TestQueue()
+//{
+//	Queue q;
+//	QueueInit(&q);
+//
+//	QueueDestroy(&q);
+//}
+
+
