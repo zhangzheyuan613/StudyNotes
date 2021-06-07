@@ -1,0 +1,50 @@
+//动态类型顺序表
+typedef int DataType;
+typedef struct SeqList
+{
+	DataType* array;
+	size_t capacity;//array指向的空间总的大小
+	size_t size;//顺序表总元素个数
+}SeqList;
+//初始化
+void SeqListInit(SeqList* ps, size_t initcap)
+{
+	assert(ps);
+	//申请空间
+	ps->array = (DataType*)malloc(sizeof(DataType)*initcap);  
+	if (NULL == ps->array)
+	{
+		assert(0);
+		return;
+	}
+	//将容量及有效元素设置好
+	ps->capacity = initcap;
+	ps->size = 0;		
+}
+//销毁
+void SeqListDestroy(SeqList* ps)
+{
+	assert(ps);
+	if (ps ->array)
+	{
+		free(ps->array);
+		ps->array = NULL;
+		ps->capacity = 0;
+		ps->size = 0;
+	}
+}
+//向顺序表中尾插data
+void SeqListPushBack(SeqList* ps, DataType data)
+{
+	assert(ps);
+	//假如空间容量够
+	//插入元素
+	ps->array[ps->size++] = data;
+}
+//尾删
+void SeqListPopBack(SeqList* ps)
+{
+	if (SeqListEmpty(ps))//不需要assert(ps),因为SeqListEmpty中会检测
+		return;
+	ps->size--;
+}
