@@ -1,0 +1,137 @@
+////动态类型顺序表
+//typedef int DataType;
+//typedef struct SeqList
+//{
+//	DataType* array;
+//	size_t capacity;//array指向的空间总的大小
+//	size_t size;//顺序表总元素个数
+//}SeqList;
+////初始化
+//void SeqListInit(SeqList* ps, size_t initcap)
+//{
+//	assert(ps);
+//	//申请空间
+//	ps->array = (DataType*)malloc(sizeof(DataType)*initcap);  
+//	if (NULL == ps->array)
+//	{
+//		assert(0);
+//		return;
+//	}
+//	//将容量及有效元素设置好
+//	ps->capacity = initcap;
+//	ps->size = 0;		
+//}
+////销毁
+//void SeqListDestroy(SeqList* ps)
+//{
+//	assert(ps);
+//	if (ps ->array)
+//	{
+//		free(ps->array);
+//		ps->array = NULL;
+//		ps->capacity = 0;
+//		ps->size = 0;
+//	}
+//}
+////向顺序表中尾插data
+//void SeqListPushBack(SeqList* ps, DataType data)
+//{
+//	assert(ps);
+//	//检测空间
+//	if (ps->size == ps->capacity)
+//	{
+//		SeqListReserve(ps, ps->capacity * 2);
+//	}
+//	//插入元素
+//	ps->array[ps->size++] = data;
+//}
+////尾删
+//void SeqListPopBack(SeqList* ps)
+//{
+//	if (SeqListEmpty(ps))//不需要assert(ps),因为SeqListEmpty中会检测
+//		return;
+//	ps->size--;
+//}
+////获取有效元素个数
+//int  SeqListSize(SeqList* ps)
+//{
+//	assert(ps);
+//	return  ps->size;
+//}
+////检测顺序表是否为空
+//int SeqListEmpty(SeqList* ps)
+//{
+//	assert(ps);
+//	return 0 == ps->size;
+//}
+////在顺序表pos位置插入一个data
+//void SeqListInsert(SeqList* ps,int pos,DataType data)
+//{
+//	assert(ps);
+//	if (pos <0 || pos>ps->size)
+//	{
+//		printf("非法位置");
+//		return;
+//	}
+//	//检测空间
+//	if (ps->size == ps->capacity) 
+//	{
+//		SeqListReserve(ps, ps->capacity * 2);
+//	}
+//	//pos及其后续元素统一后移一位
+//	for (int i = ps->size; i > pos; i--)
+//	{
+//		ps->array[i] = ps->array[i - 1];
+//	}
+//	//插入data
+//	ps->array[pos] = data;
+//	ps->size++;
+//}
+////删除顺序表pos位置的元素
+//void SeqListErase(SeqList* ps, int pos)
+//{
+//	assert(ps);
+//	if (pos<0 || pos>ps->size)
+//	{
+//		printf("非法位置");
+//		return;
+//	}
+//	//搬移pos位置之后的元素
+//	for (int i=pos+1;i<ps->size;i++)
+//	{
+//		ps->array[i - 1] = ps->array[i];
+//	}
+//	ps->size--;
+//}
+////在顺序表中查找元素data
+//int SeqListFind(SeqList* ps, DataType data)
+//{
+//	assert(ps);
+//	for (int i = 0; i < ps->size; i++)
+//	{
+//		if (data == ps->array[i])
+//		{
+//			return i;
+//		}
+//	}
+//	return -1;
+//}
+////将顺序表容量扩容到capacity	
+//void SeqListReserve(SeqList* ps, int capacity)
+//{
+//	assert(ps);
+//	if (capacity < ps->capacity)
+//		return;
+//	ps->array = (DataType*)realloc(ps->array, capacity*sizeof(DataType));
+//	assert(ps->array);
+//
+//}
+//void SeqListPrintf(SeqList* ps)
+//{
+//	assert(ps);
+//	for (int i = 0; i < ps->size; i++)
+//	{
+//		printf("%d",ps->array[i]);
+//	}
+//	printf("\n");
+//}
