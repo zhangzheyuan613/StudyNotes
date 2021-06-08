@@ -1,0 +1,55 @@
+//不带头结点单链表
+//初始化以及所有的插入、删除操作都需要传head的地址，即二级指针
+typedef int DataType;
+typedef struct SListNode
+{
+	DataType data;
+	Node* next;
+}Node;
+//创建结点
+Node* BuySListNode(DataType data)
+{
+	Node* node = (Node*)malloc(sizeof(Node));
+	if (node = NULL)
+	{
+		assert(0);
+		return NULL; 
+	}
+	node->data = data;
+	node->next = NULL;
+	return node;
+}
+//初始化
+void SListInit(Node** head)
+{
+	assert(head);
+	*head = NULL; 
+}
+//尾插
+void SListPushBack(Node** head, DataType data)
+{
+	assert(head);
+	//链表为空
+	if (NULL == *head)
+	{
+		*head = BuySListNode(data);
+	}
+	//链表非空
+	else
+	{
+		while((*head)->next)
+		{
+			*head = (*head)->next;
+		}
+		(*head)->next = BuySListNode(data);
+	}
+
+}
+//
+//
+//
+//链表中找值为data的元素
+//
+//
+//
+//
