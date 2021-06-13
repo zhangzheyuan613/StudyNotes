@@ -1,0 +1,298 @@
+### 树
+
+#### 1.树的概念：
+
+树是一种非线性的数据结构，它是由n(n>=0)个有限结点组成一个具有层次关系的集合
+
+- 有一个特殊的结点，称为根结点，根结点没有前驱结点
+- 除根结点外，其余结点被分成M(M>0)个互不相交的集合T1、T2、......、Tm，其中每一个集合Ti(1<=i<=m)又是一棵结构与树类似的子树。每棵子树的根结点只有一个前驱，可有0或多个后继
+- 因此，树是递归定义的
+
+#### 2.树的特性：
+
+- 子树不相交
+- 除了根结点，每个结点有且仅有一个父结点
+- 一棵N个结点的树有N-1条边
+
+#### 3.特殊概念：
+
+结点的度：一个节点含有的子树的个数
+
+叶子结点或终端结点：度为0的结点
+
+非终端结点或分支结点：度不为0的结点
+
+兄弟结点：具有相同父结点的结点互称为兄弟节点
+
+堂兄弟结点：父结点在同一层互为堂兄弟结点 
+
+树的度；一棵树中，最大的结点的度称为树的度
+
+结点的层次：从根开始定义,根为第一层，根的子结点为第二层，以此类推
+
+树的高度或深度；树中结点的最大层次
+
+结点的祖先：从根到该结点所经路径分支上的所有结点
+
+子孙：以某节点为根的子树中任 一节点都称为该结点的子孙
+
+森林：有m(m>0)棵互不相交的树的集合
+
+### 二叉树
+
+#### 1.概念：
+
+(1)空树
+
+(2)非空：根结点+根结点左子树+根结点右子树
+
+#### 2.特性：
+
+- 每个结点最多有两棵子树，即二叉树不存在度大于2的结点
+- 二叉树的子树有左右之分，子树的次序不能颠倒
+
+#### 3.特殊二叉树
+
+##### (1)满二叉树：
+
+一个二叉树，如果每一层的结点数都达到最大值，就是一个满二叉树
+
+##### (2)完全二叉树:
+
+对于深度为k，有n个结点的二叉树，当且仅当每一个结点都与深度为k的满二叉树中编号从1至n的结点一一对应时称为完全二叉树
+
+- 满二叉树是一种特殊的完全二叉树
+
+#### 性质：
+
+1.若根结点层数为1，则一棵非空二叉树上第i层最多有2^(i-1)个结点
+
+2.若根结点层数为1，则深度为h的二叉树的最大结点数为2^h-1个结点
+
+3.对任何一棵二叉树，若度为0的叶结点数为n0，度为2的分支结点数为n2，则n0=n2+1
+
+4.对于有n个结点的满二叉树的深度，h=log2(n+1)
+
+5.对于具有n个结点的完全二叉树，如果按照从上至下从左至右的数组顺序对所有结点从0开始编号，则对于序号为i的结点有： 
+
+- 若i>0,i位置结点的双亲序号：(i-1)/2;i=0,i为根结点编号
+- 若2i+1<n,左孩子序号：2i+1,2i+1>=n否则无左孩子
+- 若2i+2<n,右孩子序号：2i+2,2i+2>=n否则无右孩子
+
+6.完全二叉树中结点总数如果为偶数，则倒数第一个非叶子结点一定只有左孩子
+
+   完全二叉树中结点总数如果为奇数，则左右非叶子结点都有两个孩子
+
+#### 4.遍历：
+
+##### 	根	      左子树	右子树--->前序遍历
+
+```C
+void PreOrder(BTNode* root)
+{
+    if(root)
+    {
+        printf("%d",root->data);
+        PreOrder(root->left);
+        PreOrder(root->right);
+	}
+}
+```
+
+##### 	左子树	   根	   右子树--->中序遍历
+
+```C
+void PreOrder(BTNode* root)
+{
+    if(root)
+    {
+        PreOrder(root->left);
+        printf("%d",root->data);
+        PreOrder(root->right);
+	}
+}
+```
+
+##### 	左子树   右子树    根--->后序遍历
+
+```C
+void PreOrder(BTNode* root)
+{
+    if(root)
+    {
+        PreOrder(root->left);
+        PreOrder(root->right);
+        printf("%d",root->data);
+	}
+}
+```
+
+##### 层序遍历
+
+```C
+//二叉树孩子表示法
+typedef int BDataType;
+typedef struct BTNode//二叉树结点
+{
+	BDataType data;
+	struct BTNode* left;
+	struct BTNode* right;
+}BTNode;
+
+typedef BTNode* DataType;
+typedef struct QNode //队列结点
+{
+	DataType data;
+	struct QNode* next;
+}Qnode;
+typedef struct Queue //队列
+{
+	struct Queue* front;
+	struct Queue* back;
+}Queue;
+
+void LevelOrder(BTNode* root)
+{
+	Queue q;//声明
+	if (NULL == root)
+	{
+		return;
+	}
+	QueueInit(&q);//队列初始化
+	QueuePush(&q, root);//入队列
+	while(!QueueEmpty(&q))
+	{
+		BTNode* cur = QueueFront(&q);
+		printf("%d",cur->data);
+		if (cur->left)
+			QueuePush(&q, cur->left);
+		if (cur->right)
+			QueuePush(&q, cur->right);
+		QueuePop(&q);//出队列
+	}
+	QueueDestroy(&q);//队列销毁
+}
+```
+
+#### 5.基本操作
+
+```C
+//结点创建
+BTNode* BuyBinTreeNode(BDataType data)
+{
+	BTNode* node = (BTNode*)malloc(sizeof(BTNode));
+	if (NULL == node)
+	{
+		assert(0);
+		return NULL;
+	}
+	node->data = data;
+	node->left = node->right = NULL;
+	return node;
+}
+
+//销毁
+void BinTreeDestroy(BTNode** root)
+{
+	assert(root);
+	if (NULL == *root)
+	{
+		return;
+	}
+	//按后序遍历规则来销毁
+	BinTreeDestroy(&(*root)->left); 
+	BinTreeDestroy(&(*root)->right);
+	free(*root);
+	*root = NULL;
+}
+
+//求二叉树结点个数
+int BinaryTreeSize(BTNode* root)
+{
+	if (NULL == root)
+	{
+		return 0;
+	}
+	return BinaryTreeSize(root->left) + BinaryTreeSize(root->right) + 1;//左+右+根
+}
+
+//求二叉树叶子结点个数
+int BinaryTreeLeafSize(BTNode* root)
+{
+	if (NULL == root)
+	{
+		return 0;
+	}
+	if (NULL == root->left && NULL == root->right)
+	{
+		return 1;
+	}
+	return BinaryTreeLeafSize(root->left) + BinaryTreeLeafSize(root->right);
+}
+
+//求二叉树第k层结点个数
+int BinaryTreeLevelkSize(BTNode* root, int k) 
+{
+	if (NULL == root||k<=0)
+	{
+		return 0;
+	}
+	if (k = 1 )//第一层只有根结点
+	{
+		return 1;	
+	}
+	return BinaryTreeLevelKSize(root->left, k - 1) + BinaryTreeLevelKSize(root->right, k - 1);
+}
+
+//求二叉树高度
+int BinaryTreeHeight(BTNode* root)
+{
+	if (NULL == root )
+	{
+		return 0;
+	}
+	//比较左子树和右子树的高度，返回高的那一个
+	int leftheight = BinaryTreeHeight(root->left);
+	int rightheight = BinaryTreeHeight(root->right);
+	return leftheight > rightheight ? leftheight + 1 : rightheight + 1;
+}
+
+//二叉树查找值为x的结点
+BTNode* BinaryTreeFind(BTNode* root,BDataType x)
+{
+	BTNode* ret = NULL;
+	if (NULL == root)
+	{
+		return NULL;
+	}
+	if (x == root->data)
+	{
+		return root;
+	}
+	if (ret = BinaryTreeFind(root->left, x))//函数返回值赋给ret，把ret作为if的判断条件，ret若为空，不执行
+		return ret;
+	return BinaryTreeFind(root->right, x);
+}	
+
+//二叉树创建
+//array中空树的位置的值为-1，index要通过形参改变实参，要传地址
+BTNode* CreatBinTree(BDataType  array[],int size,int* index)
+{
+	BTNode* root = NULL;
+	if (*index < size && -1 != array[*index])//有先后顺序
+	{
+		//创建根节点
+		root = BuyBinTreeNode(array[*index]);
+		//创建左子树
+		++(*index);
+		root->left = CreatBinTree(array, size, index);
+		//创建右子树
+		++(*index);
+		root->right = CreatBinTree(array, size, index);
+	}
+	return root;
+}
+```
+
+
+
