@@ -1,0 +1,180 @@
+### 栈区、堆区、静态常量区
+
+栈区：局部变量、函数参数、临时变量
+
+堆:自由存储区域，malloc动态开辟，手动回收
+
+静态常量区：static静态常量、  char *str=“abcdefg”
+
+### 内存泄漏
+
+对动态开辟的空间使用完毕后没有进行释放，造成内存泄漏
+
+### malloc函数
+
+```C
+void *malloc(size_t)
+```
+
+向内存申请一块连续可用空间，并返回指向这片空间的指针
+
+- 如果开辟成功，返回一个指向开辟好的空间的指针
+- 如果开辟失败，返回一个NULL指针，<u>因此一定要检查malloc返回值</u>
+
+### free函数
+
+```
+void free(void *ptr)
+```
+
+free函数用来释放动态开辟的内存
+
+- 如果参数ptr指向的空间不是动态开辟的，那么free函数的行为是未定义的
+- 如果参数ptr指向NULL，那么free函数什么也不做 
+
+- 释放空间后，只是将空间还给了操作系统去使用，但指针仍旧指向这个空间(野指针)，ptr=NULL(解决方案)
+
+### calloc函数
+
+```C
+void *calloc(size_t num,size_t size);
+```
+
+- 函数功能为num个大小为size的元素开辟一片空间
+- 与malloc的区别：申请空间的大小不需要自己计算、申请的空间会用0来初始化
+
+### realloc函数
+
+```C
+void *realloc(void *ptr,size_t size); 
+```
+
+- 返回值为调整后的内存起始位置
+- 这个函数调整原内存空间大小的基础上，还会将原来内存中的数据移动到新的空间
+- 该函数调用后会自动释放原空间
+
+### 常见动态内存错误
+
+##### 1.对NULL指针的解引用操作 
+
+```C
+void test()
+{
+ int *p = (int *)malloc(INT_MAX/4);
+ *p = 20;//如果p的值是NULL，就会报错，因此一定要检查malloc返回值
+ free(p);
+}
+```
+
+##### 2.对动态开辟空间的越界访问 
+
+```C
+void test()
+{
+  int i = 0;
+  int *p = (int *)malloc(10*sizeof(int));
+  if(NULL == p)
+  {
+  exit(EXIT_FAILURE);
+  }
+  for(i=0; i<=10; i++)
+  {
+  *(p+i) = i;//当i是10的时候越界访问
+  }
+  free(p);
+}
+```
+
+##### 3. 使用free释放一块动态开辟内存的一部分 
+
+```C
+void test()
+{
+ int *p = (int *)malloc(100);
+ p++;
+ free(p);//p不再指向动态内存的起始位置
+}
+```
+
+##### 4. 对同一块动态内存多次释放  
+
+```C
+void test()
+{
+ int *p = (int *)malloc(100);
+ free(p);
+ free(p);//重复释放
+}
+```
+
+##### 5. 动态开辟内存忘记释放（内存泄漏 )
+
+```C
+void test()
+{
+ int *p = (int *)malloc(100);
+ if(NULL != p)
+ {
+ *p = 20;
+ }
+}
+ int main()
+{
+ test();
+ while(1);
+}
+
+```
+
+### 柔性数组成员
+
+##### 1.定义
+
+```C
+typedef struct st_type
+{
+ int i;
+ int a[0];//柔性数组成员,只能放在结构体最后面，不占空间
+}type_a;
+```
+
+##### 2.特点
+
+- 结构中的柔性数组成员前面必须至少一个其他成员
+
+- sizeof 返回的这种结构大小不包括柔性数组的内存 、
+
+- 包含柔性数组成员的结构用malloc ()函数进行内存的动态分配，并且分配的内存应该大于结构的大小，以适 
+
+  应柔性数组的预期大小 
+
+例：
+
+```C
+typedef struct st_type
+{
+ int i;
+ int a[0];//柔性数组成员
+}type_a;
+printf("%d\n", sizeof(type_a));//输出的是4
+```
+
+##### 3.柔性数组的使用
+
+```C
+typedef struct st_type
+{
+    int i;
+    int a[0];//柔性数组成员
+}type_a;
+type_a *p=(type_a)malloc(sizeof(type_a)+100*sizeof(int));
+p->i=100;
+for(int i=0;i<100;i++)
+{
+    p->a[i]=i;
+}
+free(p)
+```
+
+
+
