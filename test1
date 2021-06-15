@@ -1,0 +1,148 @@
+////二叉树孩子表示法
+//typedef int BDataType;
+//typedef struct BTNode	
+//{
+//	BDataType data;
+//	struct BTNode* left;
+//	struct BTNode* right;
+//}BTNode;
+////结点创建
+//BTNode* BuyBinTreeNode(BDataType data)
+//{
+//	BTNode* node = (BTNode*)malloc(sizeof(BTNode));
+//	if (NULL == node)
+//	{
+//		assert(0);
+//		return NULL;
+//	}
+//	node->data = data;
+//	node->left = node->right = NULL;
+//	return node;
+//}
+////层序遍历
+//typedef BTNode* DataType;
+//typedef struct QNode //队列结点
+//{
+//	DataType data;
+//	struct QNode* next;
+//}Qnode;
+//typedef struct Queue //队列
+//{
+//	struct Queue* front;
+//	struct Queue* back;
+//}Queue;
+//void LevelOrder(BTNode* root)
+//{
+//	Queue q;
+//	if (NULL == root)
+//	{
+//		return;
+//	}
+//	QueueInit(&q);
+//	QueuePush(&q, root);
+//	while(!QueueEmpty(&q))
+//	{
+//		BTNode* cur = QueueFront(&q);
+//		printf("%d",cur->data);
+//		if (cur->left)
+//			QueuePush(&q, cur->left);
+//		if (cur->right)
+//			QueuePush(&q, cur->right);
+//		QueuePop(&q);
+//	}
+//	QueueDestroy(&q);
+//}
+////销毁
+//void BinTreeDestroy(BTNode** root)
+//{
+//	assert(root);
+//	if (NULL == *root)
+//	{
+//		return;
+//	}
+//	//按后序遍历规则来销毁
+//	BinTreeDestroy(&(*root)->left); 
+//	BinTreeDestroy(&(*root)->right);
+//	free(*root);
+//	*root = NULL;
+//}
+////求二叉树结点个数
+//int BinaryTreeSize(BTNode* root)
+//{
+//	if (NULL == root)
+//	{
+//		return 0;
+//	}
+//	return BinaryTreeSize(root->left) + BinaryTreeSize(root->right) + 1;//左+右+根
+//}
+////求二叉树叶子结点个数
+//int BinaryTreeLeafSize(BTNode* root)
+//{
+//	if (NULL == root)
+//	{
+//		return 0;
+//	}
+//	if (NULL == root->left && NULL == root->right)
+//	{
+//		return 1;
+//	}
+//	return BinaryTreeLeafSize(root->left) + BinaryTreeLeafSize(root->right);
+//}
+////求二叉树第k层结点个数
+//int BinaryTreeLevelkSize(BTNode* root, int k) 
+//{
+//	if (NULL == root||k<=0)
+//	{
+//		return 0;
+//	}
+//	if (k = 1 )//第一层只有根结点
+//	{
+//		return 1;	
+//	}
+//	return BinaryTreeLevelKSize(root->left, k - 1) + BinaryTreeLevelKSize(root->right, k - 1);
+//}
+////求二叉树高度
+//int BinaryTreeHeight(BTNode* root)
+//{
+//	if (NULL == root )
+//	{
+//		return 0;
+//	}
+//	//比较左子树和右子树的高度，返回高的那一个
+//	int leftheight = BinaryTreeHeight(root->left);
+//	int rightheight = BinaryTreeHeight(root->right);
+//	return leftheight > rightheight ? leftheight + 1 : rightheight + 1;
+//}
+////二叉树查找值为x的结点
+//BTNode* BinaryTreeFind(BTNode* root,BDataType x)
+//{
+//	BTNode* ret = NULL;
+//	if (NULL == root)
+//	{
+//		return NULL;
+//	}
+//	if (x == root->data)
+//	{
+//		return root;
+//	}
+//	if (ret = BinaryTreeFind(root->left, x))//函数返回值赋给ret，把ret作为if的判断条件，ret若为空，不执行
+//		return ret;
+//	return BinaryTreeFind(root->right, x);
+//}	
+////二叉树创建
+////array中空树的位置的值为-1，index要通过形参改变实参，要传地址
+//BTNode* CreatBinTree(BDataType  array[],int size,int* index)
+//{
+//	BTNode* root = NULL;
+//	if (*index < size && -1 != array[*index])//有先后顺序
+//	{
+//		//创建根节点
+//		root = BuyBinTreeNode(array[*index]);
+//		//创建左子树
+//		++(*index);
+//		root->left = CreatBinTree(array, size, index);
+//		//创建右子树
+//		++(*index);
+//		root->right = CreatBinTree(array, size, index);
+//	}
+//	return root;
