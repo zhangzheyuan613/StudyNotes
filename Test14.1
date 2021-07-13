@@ -1,0 +1,32 @@
+#include<iostream>
+#include<algorithm>
+using namespace std;
+int main()
+{
+    int N=0;
+    while(cin>>N)
+    {
+        int f1=0,f2=1,f3,r=0;//Fibonacci数列的元素
+        int B=N-0;//步数
+        while(1)
+        {
+            if(N<2)
+            {
+                break;
+            }
+            f3=f1+f2;
+            f1=f2;
+            f2=f3;
+            if(f3-N>0)
+            {
+                B=f3-N;
+                break;
+            }
+            else
+            {
+                r=N-f3;
+            }
+        }
+       cout<<min(B,r)<<endl;
+    }
+}
