@@ -1,0 +1,106 @@
+//char *my_strcpy(char *str1, const char *str2)//实现strcpy函数
+//{
+//	assert(str1 != NULL && str2 != NULL); //参数有效性检测
+//
+//	char *strDest = str1;
+//	const char *strSrc = str2;//保护参数
+//
+//	while (*strSrc != '\0')
+//	{
+//		*strDest++ = *strSrc++;
+//	}
+//	*strDest = '\0';//处理'\0'
+//	return str1;
+//}
+
+//int main()//计算输入值位数
+//{
+//	int a;
+//	scanf("%d", &a);
+//	int n = 0;
+//	if (0 == a)
+//	{
+//		n = 1;
+//	}
+//	while (a != 0)
+//	{
+//		a /= 10;
+//		n++;
+//	}
+//	printf("%d",n);
+//}
+//int main()
+//{
+//	int a=0;
+//	scanf("%d",&a);
+//	int n=WS(a);
+//	printf("%d",n);
+//}
+
+
+
+//int main()//求Sn = a + aa + aaa + aaaa + aaaaa的前5项之和
+//{
+//	int a = 0, n = 0;
+//	int sum = 0, value = 0;
+//	scanf("%d %d", &a, &n);
+//	for (int i = 0; i < n; i++)
+//	{
+//		value = value * 10 + a;
+//		sum = sum + value;
+//	}
+//	printf("%d", sum);
+//	return 0;
+//}
+
+//typedef struct Test//指针传参
+//{
+//	int data[1000];
+//	double d[1000];
+//}Test;
+//void fun1(Test t)
+//{
+//	printf("%d %lf",t.data,t.d);
+//}
+//void fun2(Test *pt)
+//{
+//	printf("%d %lf", pt->data, pt->d);
+//}
+//void main()
+//{
+//	Test t;
+//}
+
+//struct student
+//{
+//	char name[10];
+//	int age;
+//};
+//void print(struct student *ps)
+//{
+//	printf("%s  %d\n",(*ps).name,(*ps).age);
+//	printf("%s  %d", ps->name, ps->age);
+//}
+//int main()
+//{
+//	struct student s = { "张三",15 };
+//	print(&s);
+//}
+
+//int fun(int a, int b)//函数指针
+//{
+//	int value = a + b;
+//	return value;
+//}
+//int main()
+//{
+//	int a = 10;
+//	int b = 20;
+//	int (*pfun)(int a, int b);//定义一个指向函数的指针
+//	pfun = fun;
+//	int result =(*pfun)(a, b);
+//	printf("%d",result);
+//	return 0;
+//}
+
+//void fun(int *sum, int a, int b)//不返回值的情况下计算两数和
