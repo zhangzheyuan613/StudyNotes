@@ -1,0 +1,169 @@
+//
+//char *my_strcpy(char *str1, const char *str2)//实现strcpy函数
+//{
+//	assert(str1 != NULL && str2 != NULL); //参数有效性检测
+//
+//	char *strDest = str1;
+//	const char *strSrc = str2;//保护参数
+//
+//	while (*strSrc != '\0')
+//	{
+//		*strDest++ = *strSrc++;
+//	}
+//	*strDest = '\0';//处理'\0'
+//	return str1;
+//}
+
+//int main()//计算输入值位数
+//{
+//	int a;
+//	scanf("%d", &a);
+//	int n = 0;
+//	if (0 == a)
+//	{
+//		n = 1;
+//	}
+//	while (a != 0)
+//	{
+//		a /= 10;
+//		n++;
+//	}
+//	printf("%d",n);
+//}
+//int main()
+//{
+//	int a=0;
+//	scanf("%d",&a);
+//	int n=WS(a);
+//	printf("%d",n);
+//}
+
+
+
+//int main()//求Sn = a + aa + aaa + aaaa + aaaaa的前5项之和
+//{
+//	int a = 0, n = 0;
+//	int sum = 0, value = 0;
+//	scanf("%d %d", &a, &n);
+//	for (int i = 0; i < n; i++)
+//	{
+//		value = value * 10 + a;
+//		sum = sum + value;
+//	}
+//	printf("%d", sum);
+//	return 0;
+//}
+
+//typedef struct Test//指针传参
+//{
+//	int data[1000];
+//	double d[1000];
+//}Test;
+//void fun1(Test t)
+//{
+//	printf("%d %lf",t.data,t.d);
+//}
+//void fun2(Test *pt)
+//{
+//	printf("%d %lf", pt->data, pt->d);
+//}
+//void main()
+//{
+//	Test t;
+//}
+
+//struct student
+//{
+//	char name[10];
+//	int age;
+//};
+//void print(struct student *ps)
+//{
+//	printf("%s  %d\n",(*ps).name,(*ps).age);
+//	printf("%s  %d", ps->name, ps->age);
+//}
+//int main()
+//{
+//	struct student s = { "张三",15 };
+//	print(&s);
+//}
+
+//int fun(int a, int b)//函数指针
+//{
+//	int value = a + b;
+//	return value;
+//}
+//int main()
+//{
+//	int a = 10;
+//	int b = 20;
+//	int (*pfun)(int a, int b);//定义一个指向函数的指针
+//	pfun = fun;
+//	int result =(*pfun)(a, b);
+//	printf("%d",result);
+//	return 0;
+//}
+
+//void fun(int *sum, int a, int b)//不返回值的情况下计算两数和
+//{
+//	*sum = a + b;
+//}
+//int main()
+//{
+//	int a = 10;
+//	int b = 20;
+//	int sum = 0;
+//	fun(&sum, a, b);
+//	printf("%d", sum);
+//	return 0;
+//}
+
+//void Swap(int *a, int *b)
+//{
+//	int i = *a;
+//	*a = *b;
+//	*b = i;
+//}
+//void main()
+//{
+//	int a = 10;
+//	int b = 30;
+//	Swap(&a, &b);
+//}
+
+//void Bubble_Sort(int arr[], int left, int right)//冒泡排序
+//{
+//	for (int i = left; i < right - 1; i++)
+//	{
+//		int j = left;
+//		for (j = left; j < right - 1 - i; j++)
+//		{
+//			if (arr[j] > arr[j + 1])
+//			{
+//				int t = arr[j + 1];
+//				arr[j + 1] = arr[j];
+//				arr[j] = t;
+//			}
+//		}
+//	}
+//}
+
+//void Sort(int ar, int left, int right)
+//{
+//	for(int j=0;)
+//	for (int i = left; i < left+right-1-i; i++)
+//	{
+//		if (ar[i] > ar[i+1 ])
+//		{
+//			int temp = ar[i + 1];
+//			ar[i + 1] = ar[i];
+//			ar[i] = temp;
+//		}
+//	}
+//}
+//void main()
+//{
+//	int ar[] = { 1,2,300,4,50,6,40,7,8,9,10 };
+//	int n = sizeof(ar) / sizeof(ar[0]);
+//	Sort(ar, 0, n);
+//}
