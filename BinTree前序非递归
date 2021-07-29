@@ -1,0 +1,25 @@
+//非递归
+class Solution {
+public:
+    vector<int> preorderTraversal(TreeNode* root) {
+        vector<int> ret;
+        if(nullptr==root)
+            return ret;
+        TreeNode* cur=root;
+        stack<TreeNode*> s;
+        while(cur||!s.empty())
+        {
+            while(cur) 
+            {
+                //从根结点开始，顺着左侧路径往下遍历
+                //保存路径中所经过的所有结点
+                ret.push_back(cur->val);
+                s.push(cur->right);
+                cur=cur->left;
+            }
+            cur=s.top();
+            s.pop();
+        }
+        return ret;
+    }
+};
