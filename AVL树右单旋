@@ -1,0 +1,23 @@
+parent->left=subLR;
+if(subLR)
+{
+    subLR->parent=parent;
+}
+subL->right=parent;
+Node* pparent=parent->parent;
+parent->parent=subL;
+subL->parent=pparent;		
+if(nullptr==pparent)
+{
+    root=subL;
+}
+else
+{
+    if(parent==pparent->left)
+        pparent->left=subL;
+    else
+        pparent->right=subL;
+      
+}
+parent->bf=0;
+subL->bf=0;
