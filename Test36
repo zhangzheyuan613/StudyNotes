@@ -1,0 +1,223 @@
+#include <stdio.h>
+#include <string.h>
+#include <math.h>
+#include <stdlib.h>
+#include <time.h>
+#include <windows.h>
+#include<assert.h>
+#include<malloc.h>
+#pragma warning(disable:4996)
+
+////合并两个有序数组
+//void MergeData(int array[], int left, int mid, int right, int temp[])
+//{
+//	int begin1 = left, end1 = mid;
+//	int begin2 = mid , end2 = right;
+//	int index = left;
+//	while (begin1 < end1 && begin2 < end2)
+//	{
+//		if (array[begin1] <= array[begin2])
+//		{
+//			temp[index++] = array[begin1++];
+//		}
+//		else
+//		{
+//			temp[index++] = array[begin2++];
+//		}
+//	}
+//	while (begin1<end1)
+//	{
+//		temp[index++] = array[begin1++];
+//	}
+//	while (begin2 < end2)
+//	{
+//		temp[index++] = array[begin2++];
+//	}
+//}
+////归并排序
+//void MergeSort(int array[], int left, int right, int temp[])
+//{
+//	if (right - left <= 1)
+//	{
+//		return;
+//	}
+//	int mid = left + ((right - left) / 2);
+//	
+//	MergeSort(array, left, mid, temp);
+//
+//	MergeSort(array,mid , right, temp);
+//
+//	MergeData(array, left, mid, right, temp);   
+//	memcpy(array + left, temp+left, sizeof(array[0])*(right - left));
+//}
+//
+//
+////第一种：hoare法
+//int Partion1(int array[], int left, int right)
+//{
+//	int begin = left;
+//	int end = right - 1;
+//	int key = array[end];//基准值是最后一个元素
+//	while (begin < end)
+//	{
+//		while (begin<end&&array[begin] <= key) //保证有效区间
+//		{
+//			begin++;
+//		}
+//		while (begin < end&&array[end] >= key)   
+//		{
+//			end--;	
+//		}
+//		if (begin < end)
+//		{
+//			swap(&array[begin], &array[end]);
+//		}
+//	}
+//	if (begin!=right-1)
+//	{
+//		swap(&array[begin], &array[right - 1]);//将基准值放在数组中间
+//	}
+//	return begin;//返回基准值位置
+//}
+////第二种：挖坑法	
+//int Partion2(int array[], int left, int right)
+//{
+//	int begin = left;
+//	int end = right - 1;
+//	int key = array[end];
+//	while (begin < end)
+//	{
+//		//begin从前往后找，找比基准值大的元素 
+//		while (begin < end&&array[begin] <= key)
+//		{
+//			begin++;
+//		}
+//		if (begin < end)
+//		{
+//			array[end] = array[begin];
+//			end--;
+//		}
+//
+//		while (begin < end&&array[end] >= key)
+//		{
+//			end--;
+//		}
+//		if (begin < end)
+//		{
+//			array[begin] = array[end];
+//			begin++;
+//		}
+//	}
+//	array[begin] = key;
+//	return begin;
+//}
+////第三种
+//int Partion3(int array[], int left, int right)
+//{
+//	int cur = left;
+//	int prev = cur-1;
+//	int key = array[right - 1];
+//	while (cur < right) 
+//	{
+//		if (array[cur] < key&&++prev != cur)
+//		{
+//			swap(&array[cur], &array[prev]);
+//		}
+//		cur++;
+//	}
+//	if (++prev != right - 1)
+//	{
+//		swap(&array[prev], &array[right-1]);
+//	}
+//	return prev;
+//}
+//
+//void QuickSort(int array[], int left, int right)
+//{
+//	int div = 0;
+//	if (right - left <= 1)
+//	{
+//		return;
+//	}
+//	//找基准值对区间中的数据进行划分，div表述划分好等候基准值位置
+//	div = Partion3(array, left, right);
+//	//递归
+//	QuickSort(array, left, div);
+//	QuickSort(array, div+1, right);
+//}
+//int main()
+//{
+//	int array[] = { 8,9,6,4,3,7,5,2,1 };
+//	QuickSort(array,0,9);
+//	for (int i = 0; i < 9; i++)
+//	{
+//		printf("%d", array[i]);
+//	}
+//	return 0;
+//}
+//
+//
+////计数排序
+//void CountSort(int array[], int size)
+//{
+//	//1.找数据范围
+//	int max = array[0];
+//	int min = array[0];
+//	int index = 0;
+//	for (int i = 0; i < size; i++)
+//	{
+//		if (array[i] > max)
+//		{
+//			max = array[i];
+//		}
+//		if (array[i] < min)
+//		{
+//			min = array[i];
+//		}
+//	}
+//	//2.申请空间
+//	int* count = (int*)calloc(max - min + 1, sizeof(int));
+//	if (NULL == count)
+//	{
+//		return NULL; 
+//	}
+//	//3.统计每个元素出现次数
+//	for (int i = 0; i < size; i++)
+//	{
+//		count[array[i] - min]++;
+//	}
+//	//4.array数组排序
+//	for (int i=0;i<max-min+1;i++)
+//	{
+//		while (count[i]--)
+//		{
+//			array[index++] = i + min;
+//		}
+//	}
+//	free(count);
+//}
+//
+////冒泡排序
+//void BubbleSort(int array[], int size)
+//{
+//	for (int i = 0; i < size - 1; i++)
+//	{
+//		int flag=0;
+//		//相邻两个元素比较，不满足就交换
+//		for (int j = 0; j < size - i-1; j++)
+//		{
+//			if (array[j]>array[j+1])
+//			{
+//				flag=1;
+//				swap(&array[j] ,&array[j+1]);
+//			}	
+//		}
+//		if(!flag)
+//		{
+//			return;
+//		}
+//	}
+//}
+//
+////堆排序
+//void swap
