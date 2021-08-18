@@ -1,0 +1,49 @@
+#pragma once
+#include<iostream>
+#include"FileCompress.h"
+#include"HuffmanTree.hpp"
+
+using namespace std;
+
+FileCompress::FileCompress()
+{
+	//将fileByteInfo数组进行初始化
+	for (int i = 0; i < 256; i++)
+	{
+		fileByteInfo[i].ch = i;
+	}
+}
+bool FileCompress::CompressFile(const string& filePath)
+{
+	//统计源文件中每个字节出现次数并保存
+	FILE* pf = fopen(filePath.c_str(), "r");
+	if (nullptr == pf)
+	{
+		cout << "打开待压缩文件失败" << endl;
+	}
+	char readbuff[1024];
+	while (1)
+	{
+		size_t rdsize=fread(readbuff,1,1024,pf);//实际读到的字节大小
+		if (0 == rdsize)
+		{
+			//已经读取到了文件末尾
+			break;
+		} 
+		//进行统计
+		for (size_t i = 0; i < rdsize; i++)
+		{
+			fileByteInfo[readbuff[i]].appearCount++;
+		}
+	}
+	//根据统计的结果创建Huffman树
+	HuffmanTree<ByteInfo> ht;
+	ByteInfo invalid;
+	ht.CreateHuffmanTree(fileByteInfo, 256,invalid);
+	fclose(pf);
+  	return 0;
+}
+bool FileCompress::UNCompressFile(const string& filePath)
+{
+	return 0;
+}
