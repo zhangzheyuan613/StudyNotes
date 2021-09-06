@@ -1,0 +1,158 @@
+bool FileCompress::UNCompressFile(const string& filePath)
+{
+	//1.从压缩文件中读取解压缩需要的信息
+	FILE* fIn = fopen(filePath.c_str(), "rb");
+	if (nullptr == fIn)
+	{
+		cout<<"打开压缩文件失败"<<endl;
+		return false;
+	}
+	//读取源文件后缀
+	string postFix;
+	GetLine(fIn, postFix);
+	//读取总行数以及字符频次信息
+	string strContent;
+	GetLine(fIn, strContent);
+	size_t lineCount=atoi(strContent.c_str());
+	strContent = "";
+	for (size_t i = 0; i < lineCount; ++i)
+	{ 
+
+		GetLine(fIn, strContent);
+		if ("" == strContent)//处理多行问题
+		{
+			strContent += "\n";
+			GetLine(fIn, strContent);
+		 }
+		fileByteInfo[(u_char)strContent[0]].appearCount = atoi(strContent.c_str() + 2);
+		strContent = "";
+	}
+	//2.恢复Huffman树
+	HuffmanTree<ByteInfo> ht;
+	ByteInfo invalid;
+	ht.CreateHuffmanTree(fileByteInfo, 256,invalid);
+	//3.读取压缩数据，结合Huffman树解压缩
+	string fileName =("3");
+	fileName += postFix;
+	FILE* fOut = fopen(fileName.c_str(),"wb");
+
+	u_char readBuff[1024];
+	u_char bitCount=0;
+	HuffmanTreeNode<ByteInfo>* cur = ht.GetRoot();
+	int fileSize = cur->weight.appearCount;
+	int compressSize = 0;
+	while (1)
+	{
+		size_t rdsize = fread(readBuff, 1, 1024, fIn);
+		if (0 == rdsize)
+		{
+			break;
+		}
+		for (size_t i = 0; i < rdsize; ++i)
+		{
+			//逐个字节进行解压缩
+			u_char ch = readBuff[i];
+			bitCount = 0;
+			while (bitCount < 8)
+			{
+				if (ch & 0x80)
+					cur=cur->right;
+				else
+					cur=cur->left;
+				if (nullptr == cur->left&&nullptr == cur->right)
+				{
+					fputc(cur->weight.ch, fOut);
+					cur = ht.GetRoot();
+					compressSize++;
+					//如果成功解压缩字节个数与源文件大小相同时结束
+					if (compressSize == fileSize)
+					{
+						break;
+					}
+				}
+				bitCount++;
+				ch <<= 1;
+			}
+		}
+	}
+	fclose(fOut);
+	fclose(fIn);
+	return 0;
+}
+
+
+//获取一行字符串
+void FileCompress::GetLine(FILE* fIn, string& strContent)
+{
+	u_char ch;
+	while (!feof(fIn))
+	{
+		ch = fgetc(fIn);
+		if (ch=='\n')
+		{
+			break;
+		}
+		strContent += ch;
+	}
+}
+
+//获得字符对应的Huffman编码
+void FileCompress::GenerateHuffmanCode(HuffmanTreeNode<ByteInfo>* root)
+{
+	if (nullptr == root)
+	{
+		return;
+	}
+	//Huffman树中所有有效的权值都在叶子节点位置
+	if (nullptr == root->left&&nullptr == root->right)
+	{
+		HuffmanTreeNode<ByteInfo>* cur = root;
+		HuffmanTreeNode<ByteInfo>* parent = cur->parent;
+		string& strCode = fileByteInfo[cur->weight.ch].strCode;
+		while(parent)
+		{
+			if (parent->left == cur)
+			{
+				strCode += '0';
+			}
+			if (parent->right == cur)
+			{
+				strCode += '1';
+			}
+			cur = parent;
+			parent = parent->parent;
+		}
+		reverse(strCode.begin(),strCode.end());
+	}
+	GenerateHuffmanCode(root->left);
+	GenerateHuffmanCode(root->right);
+}
+
+
+//向压缩文件中写入解压缩头部信息
+void FileCompress::WriteHead(FILE* fOut, const string& filePath)
+{
+	//写入源文件后缀
+	string postFix=filePath.substr(filePath.rfind('.'));
+	postFix += "\n";
+	fwrite(postFix.c_str(), 1, postFix.size(), fOut);
+	//获得字节频次信息以及总行数
+	size_t lineCount=0;
+	string chAppearCount;
+	for (size_t i = 0; i < 256; i++)
+	{
+		if (fileByteInfo[i].appearCount > 0)
+		{
+			chAppearCount += fileByteInfo[i].ch;
+			chAppearCount += ':';
+			chAppearCount += to_string(fileByteInfo[i].appearCount);
+			chAppearCount += "\n";
+			lineCount++;
+		}
+	}
+	//写字节频次信息及总行数
+	string totalLine = to_string(lineCount);
+	totalLine += "\n";	
+	fwrite(totalLine.c_str(),1,totalLine.size(),fOut);
+	fwrite(chAppearCount.c_str(), 1, chAppearCount.size(), fOut);
+}
