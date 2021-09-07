@@ -1,0 +1,97 @@
+#pragma once
+#include<iostream>
+
+#include"FileCompress.h"
+
+using namespace std;
+
+FileCompress::FileCompress()
+{
+	//将fileByteInfo数组进行初始化
+	for (int i = 0; i < 256; i++)
+	{
+		fileByteInfo[i].ch = i;
+	}
+}
+
+bool FileCompress::CompressFile(const string& filePath)
+{
+	//1.统计源文件中每个字节出现次数并保存
+	FILE* pf = fopen(filePath.c_str(), "rb");
+	if (nullptr == pf)
+	{
+		cout << "打开待压缩文件失败" << endl;
+	}
+	u_char readbuff[1024];
+	while (1)
+	{	
+		size_t rdsize=fread(readbuff,1,1024,pf);//实际读到的字节大小
+		if (0 == rdsize)
+		{
+			//已经读取到了文件末尾
+			break;
+		} 
+		//进行统计
+		for (size_t i = 0; i < rdsize; i++)
+		{
+			fileByteInfo[readbuff[i]].appearCount++;
+		}
+	}
+
+	//2.根据统计的结果创建Huffman树
+	//注意：创建期间需要将权值为0的节点剔除掉
+	HuffmanTree<ByteInfo> ht;
+	ByteInfo invalid;
+	ht.CreateHuffmanTree(fileByteInfo, 256,invalid);
+
+	//3.根据Huffman树获得每个字节的编码
+	GenerateHuffmanCode(ht.GetRoot());
+
+	//4.向压缩文件中写入解压缩头部信息
+	FILE* fOut = fopen("2.hzp", "wb");//写方式打开，如果没有2.zip，就会创建
+	WriteHead(fOut, filePath);
+
+	//5.使用获取的编码对源文件进行改写——对源文件每个字节替换成对应的二进制格式huffman编码
+	//统计文件中字节出现次数时已经读取过一次了，pf已经在文件末尾了
+	fseek(pf, 0, SEEK_SET);//将pf文件指针移动到起始位置
+	
+	u_char a = 0;
+	int bitCount = 0;
+	while (1)
+	{	
+		size_t rdsize = fread(readbuff, 1, 1024, pf);
+		if (0 == rdsize)
+		{
+			break;
+		}
+		//用编码改写字节
+		for (size_t i = 0; i < rdsize; i++)
+		{
+			string& strCode = fileByteInfo[readbuff[i]].strCode;
+			for (size_t j = 0; j < strCode.size(); j++)
+			{
+				a <<= 1;
+				if ('1'==strCode[j])
+				{
+					a |= 1;
+				}
+				//如果8个比特位填充满，就将该字节写入到压缩文件当中
+				bitCount++;
+				if (8 == bitCount)
+				{
+					fputc(a, fOut);
+					bitCount = 0;
+				}
+			}
+		}
+	}
+	if (bitCount>0&&bitCount<8)
+	{
+		a <<= 8 - bitCount;
+		fputc(a, fOut);
+	}
+
+	fclose(pf);
+	fclose(fOut);
+  	return 0;
+}
