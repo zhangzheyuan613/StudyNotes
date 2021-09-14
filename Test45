@@ -1,0 +1,70 @@
+//#include<vector>;
+//using namespace std;
+//class Solution {
+//public:
+//	/**
+//	 * 代码中的类名、方法名、参数名已经指定，请勿修改，直接返回方法规定的值即可
+//	 *
+//	 * max age increasing subsequence
+//	 * @param members int整型vector 年龄乱序的团队成员
+//	 * @return int整型
+//	 */
+//	void sort(vector<int>& members)
+//	{
+//		int i, temp;
+//		for (i = 0; i < members.size()-1; i++)
+//		{
+//			int flog = 1;
+//			int j;
+//			for (j = 0; j < members.size() - 1 - i; j++)
+//			{
+//				if (members[j] > members[j+1])
+//				{
+//					temp = members[j];
+//					members[j] = members[j+1];
+//					members[j+1] = temp;
+//					flog = 0;
+//				}
+//			}
+//			if (flog)
+//			{
+//				return;
+//			}
+//		}
+//	}
+//	int MALS(vector<int>& members) {
+//		// write code here
+//		sort(members);
+//		int len = 1, max = 1, age = members[0], i;
+//			for (i = 1; i < members.size(); i++)
+//		{
+//			if (members.size() == 1)
+//			{
+//				return 1;
+//			}
+//			if (age + 1 == members[i])
+//			{
+//				len++;
+//				if (len > max)
+//				{
+//					max = len;
+//				}
+//				age = members[i];
+//			}
+//			else
+//			{
+//				age = members[i];
+//				len = 1;
+//			}
+//		}
+//		return max;
+//	}
+//
+//};
+//
+//int main()
+//{
+//	Solution s;
+//	vector<int> r = { 20,40,21,22,23 };
+//	int ret = s.MALS(r);
+//}
