@@ -1,0 +1,150 @@
+# 信号概念
+
+信号是一个软件中断
+
+# 信号种类
+
+## 非可靠信号（非实时信号）
+
+[1,31]：不可靠，信号可能会丢失
+
+## 可靠信号（实时信号）
+
+[34,64]：可靠，信号不会丢失
+
+# 信号产生方式
+
+## 硬件产生
+
+ctrl+c：2号信号
+
+ctrl+|：3号信号
+
+## 软件产生
+
+kill命令
+
+kill	-9命令
+
+int	raise（int	sig）==>谁调用谁接受到信号
+
+abort函数==>6号信号
+
+alarm函数==>14号信号
+
+# 信号注册
+
+ctags	-R
+
+ctrl+]——>跳转到光标所在类型定义的地方
+
+ctrl+o——>回到光标上一次所在位置
+
+### sigqueue队列
+
+前提：同一个信号注册两次
+
+非可靠信号的注册：
+
+​		第一次：将信号对应的比特位变成1，同时在sigqueue队列中添加sigqueue节点
+
+​		第二次：只会将信号对应的比特位从1改为1，不会添加sigqueue节点
+
+可靠信号的注册
+
+​		第一次：将信号对应的比特位变成1，同时在sigqueue队列中添加sigqueue节点
+
+​		第二次：还会在在sigqueue队列中添加可靠信号的sigqueue节点
+
+# 信号注销
+
+## 非可靠信号注销
+
+将信号对应在sig位图中的比特位置为0，并且将sigqueue节点从sigqueue队列中出队
+
+## 可靠信号注销
+
+第一步：将可靠信号对应的sigqueue节点从sigqueue队列中出队
+
+第二步：判断sigqueue队列中是否还有当前可靠信号的sigqueue节点
+
+​			如果没有：则将sigqueue位图中可靠信号对应比特位置为0
+
+​			如果有：则不会将sigqueue位图中可靠信号对应比特位置为0
+
+# 信号处理
+
+可靠信号先处理，非可靠信号后处理
+
+## 默认处理方式
+
+SIGDFL
+
+## 忽略处理
+
+SIGIGN
+
+SIGGHLD信号——>子进程在退出时会给父进程发送一个SIGGHLD信号
+
+## 自定义处理
+
+更改信号的处理方式
+
+**typedef	void	（*sighandler_t）（int）；**
+
+**sighandler_t	signal（int	signum，sighandler_t	handler）;**
+
+​		signum：待自定义函数处理的信号
+
+​		handler：接受一个函数地址，该函数返回值为void，参数为int，参数的含义为当进程收到某个信号触发调						  用了该函数的时候，会将该信号的值传递给该函数
+
+ 
+
+**int	sigaction（int	signum，const	struct	sigaction*	act，struct	sigaction*	oldact）；**
+
+​		signum：待自定义函数处理的信号
+
+​		act：想要将信号更改为什么处理动作
+
+​		oldact：信号之前的处理动作
+
+# 信号捕获
+
+1.执行流从内核态切换到用户态之前一定会调用do_signal函数处理信号
+
+2.从用户态切换到内核态的时候，是调用了系统调用函数，或者进程异常
+
+# 信号阻塞
+
+1.信号阻塞指的是当准备处理信号的时候，会判断当前信号是否为阻塞，如果该信号为阻塞，则暂时不去处理该
+
+​	信号
+
+2.信号的阻塞不会干扰信号的注册
+
+3.可靠信号收到多次处理多次，非可靠信号收到多次只会处理一次，非可靠信号有可能丢失
+
+4.9号、19号信号不能被阻塞
+
+### block位图
+
+定义在task_struct{...}中
+
+int	sigprocmask（int	how，const	sigset_t*	set，sigset_t*	）；
+
+​			how：告诉sigprocmask函数以什么方式进行工作
+
+​					SIG_BLOCK：设置某个信号为阻塞状态
+
+​					SIG_UNBLOCK：设置某个信号为非阻塞状态
+
+​					SIG_SETMASK：替换原来的block位图
+
+​								SIG_BLOCK：block(new)=block(old)|set	
+
+​								SIG_UNBLOCK：block(new)=block(old)&(~set)		
+
+​								SIG_SETMASK：block(new)=set
+
+
+
