@@ -1,0 +1,44 @@
+////ÔÚA×Ö·û´®ÖÐ²éÕÒB×Ö·û´®µÚÒ»´Î³öÏÖµÄÎ»ÖÃ
+#include<iostream>
+#include<string>
+#include<vector>
+#include<algorithm>
+#include<cstdio>
+#include<malloc.h>
+using namespace std;
+//int main()
+//{
+//	string A, B;
+//	cin >> A >> B;
+//	int n = 0;
+//	for(int i = 0; i < A.size(); i++)
+//	{
+//		n = i;
+//		for (int j = 0; j < B.size(); j++)
+//		{
+//			if (A[i] == B[j])
+//			{
+//				i++;
+//				continue;
+//			}
+//			if (A[i] != B[j])
+//			{
+//				i = n;
+//				break;
+//			}
+//			
+//		}
+//		if (i == n + B.size()) {
+//			cout << n;
+//		}
+//
+//	}
+//}
+
+
+int main()
+{
+	int* p = (int*)malloc(5);
+	free(p);
+	free(p);
+}
